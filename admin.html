@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel de administración | CLASS TOUR</title>
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f32'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23f7f5ef'%3ECT%3C/text%3E%3C/svg%3E">
+
+  <style>
+    :root {
+      --ink: #17211b;
+      --muted: #68736c;
+      --paper: #f7f5ef;
+      --card: #ffffff;
+      --line: #e3e5df;
+      --brand: #315c45;
+      --brand-dark: #173f32;
+      --soft: #edf1eb;
+      --danger: #a63d2f;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    [hidden] { display: none !important; }
+
+    button, input, select { font: inherit; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 20px;
+      background: var(--brand-dark);
+      color: #fff;
+    }
+
+    .topbar strong { letter-spacing: .04em; }
+    .topbar span { opacity: .8; font-size: .9rem; }
+    .topbar .spacer { flex: 1; }
+
+    main {
+      width: min(1100px, calc(100% - 32px));
+      margin: 28px auto 60px;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn:hover { background: var(--brand-dark); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    .btn-light {
+      background: var(--card);
+      color: var(--brand);
+      border: 1px solid var(--line);
+    }
+
+    .btn-light:hover { background: var(--soft); }
+
+    .topbar .btn-light { background: transparent; color: #fff; border-color: rgba(255,255,255,.4); }
+    .topbar .btn-light:hover { background: rgba(255,255,255,.12); }
+
+    .login {
+      max-width: 420px;
+      margin: 60px auto;
+      padding: 32px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.06);
+    }
+
+    .login h1 { margin: 0 0 6px; font-size: 1.5rem; }
+    .login p { margin: 0 0 20px; color: var(--muted); font-size: .92rem; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+    .field label { font-size: .82rem; font-weight: 700; }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .field input:focus, .field select:focus, .btn:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 1px;
+    }
+
+    .show-key { display: flex; align-items: center; gap: 8px; font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
+
+    .error {
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: #fbeceb;
+      color: var(--danger);
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      padding: 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+
+    .stat b { display: block; font-size: 1.7rem; line-height: 1.1; }
+    .stat span { color: var(--muted); font-size: .82rem; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .toolbar .field { margin: 0; flex: 1 1 180px; }
+    .toolbar .field.grow { flex: 2 1 260px; }
+
+    .list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .empty {
+      grid-column: 1 / -1;
+      padding: 50px 20px;
+      text-align: center;
+      color: var(--muted);
+      background: var(--card);
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+    }
+
+    .card {
+      padding: 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 14px rgba(0,0,0,.04);
+    }
+
+    .card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card h3 { margin: 0; font-size: 1.1rem; overflow-wrap: anywhere; }
+
+    .badge {
+      flex-shrink: 0;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: .74rem;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .badge-pending   { background: #fdf3dc; color: #8a5d0b; border-color: #f0dba5; }
+    .badge-approved  { background: #e3f0e8; color: #24523a; border-color: #bcd8c6; }
+    .badge-active    { background: #315c45; color: #fff; }
+    .badge-suspended { background: #fbeceb; color: var(--danger); border-color: #efc4bf; }
+    .badge-inactive  { background: #eceeea; color: #555; border-color: #d8dbd5; }
+
+    dl.info { margin: 0 0 12px; display: grid; grid-template-columns: 110px 1fr; gap: 6px 10px; font-size: .9rem; }
+    dl.info dt { color: var(--muted); font-weight: 600; }
+    dl.info dd { margin: 0; overflow-wrap: anywhere; }
+    dl.info a { color: var(--brand); font-weight: 600; }
+
+    details { margin-bottom: 14px; font-size: .9rem; }
+    details summary { cursor: pointer; color: var(--brand); font-weight: 700; }
+    details p { margin: 8px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .actions .field { margin: 0; }
+    .inline { display: flex; gap: 8px; }
+    .inline input { flex: 1; min-width: 0; }
+    .linkline { font-size: .85rem; color: var(--muted); }
+    .linkline a { color: var(--brand); font-weight: 700; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%) translateY(20px);
+      max-width: calc(100% - 32px);
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: var(--brand-dark);
+      color: #fff;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .toast.error-toast { background: var(--danger); }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .tab {
+      margin-bottom: -1px;
+      padding: 12px 18px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--brand-dark);
+      border-bottom-color: var(--brand);
+    }
+
+    .tab:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+    .course-card {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 16px;
+      padding: 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 14px rgba(0,0,0,.04);
+    }
+
+    .course-cover {
+      display: grid;
+      place-items: center;
+      width: 110px;
+      height: 110px;
+      border-radius: 12px;
+      object-fit: cover;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 700;
+    }
+
+    .course-body h3 { margin: 0 0 4px; font-size: 1.05rem; overflow-wrap: anywhere; }
+    .course-body p { margin: 0; color: var(--muted); font-size: .88rem; overflow-wrap: anywhere; }
+    .course-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+
+    .badge-published { background: #e3f0e8; color: #24523a; border-color: #bcd8c6; }
+    .badge-draft     { background: #eceeea; color: #555; border-color: #d8dbd5; }
+
+    .course-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+
+    .btn-small { padding: 7px 12px; font-size: .85rem; }
+
+    .btn-danger { background: var(--card); color: var(--danger); border: 1px solid #efc4bf; }
+    .btn-danger:hover { background: #fbeceb; }
+
+    .course-form {
+      padding: 26px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+    }
+
+    .course-form h2 { margin: 0 0 4px; font-size: 1.3rem; }
+    .course-form .hint { margin: 0 0 20px; color: var(--muted); font-size: .9rem; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0 16px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .field textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      resize: vertical;
+    }
+
+    .field textarea:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+
+    .field small { color: var(--muted); font-size: .78rem; }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin: 12px 0 4px;
+    }
+
+    .photo-item {
+      position: relative;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+
+    .photo-item img { display: block; width: 100%; height: 110px; object-fit: cover; }
+
+    .photo-item .cover-flag {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--brand-dark);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+    }
+
+    .photo-item .photo-actions { display: flex; gap: 6px; padding: 6px; }
+    .photo-item .photo-actions .btn { flex: 1; padding: 5px 6px; font-size: .75rem; }
+
+    .form-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+
+    .field .checkline {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .field .checkline input[type="checkbox"] {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      padding: 0;
+      margin: 0;
+    }
+
+    @media (max-width: 800px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .course-card { grid-template-columns: 84px 1fr; }
+      .course-cover { width: 84px; height: 84px; }
+    }
+
+    @media (max-width: 800px) {
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .list { grid-template-columns: 1fr; }
+      .topbar span { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <strong>CLASS TOUR</strong>
+    <span>Panel de administración</span>
+    <div class="spacer"></div>
+    <button type="button" class="btn btn-light" id="logoutBtn" hidden>Salir</button>
+  </header>
+
+  <main>
+
+    <!-- ACCESO -->
+    <section class="login" id="loginView">
+      <h1>Acceso de administrador</h1>
+      <p>Escribe la clave <code>ADMIN_KEY</code> del archivo <code>.env</code> del backend.</p>
+
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="keyInput">Clave</label>
+          <input
+            type="password"
+            id="keyInput"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <label class="show-key">
+          <input type="checkbox" id="showKey">
+          Mostrar la clave
+        </label>
+
+        <p class="error" id="loginError" role="alert" hidden></p>
+
+        <button type="submit" class="btn" id="loginBtn" style="width:100%">Entrar</button>
+      </form>
+    </section>
+
+    <!-- PANEL -->
+    <section id="panelView" hidden>
+
+      <div class="tabs" role="tablist">
+        <button type="button" class="tab" id="tabProposals" role="tab" aria-selected="true">Propuestas</button>
+        <button type="button" class="tab" id="tabCourses" role="tab" aria-selected="false">Cursos</button>
+      </div>
+
+      <!-- PROPUESTAS DE INSTRUCTORES -->
+      <div id="proposalsSection">
+
+        <div class="summary" id="summary"></div>
+
+        <div class="toolbar">
+          <div class="field">
+            <label for="statusFilter">Mostrar</label>
+            <select id="statusFilter">
+              <option value="all">Todas las propuestas</option>
+              <option value="pending">Pendientes</option>
+              <option value="approved">Aprobadas</option>
+              <option value="active">Activas</option>
+              <option value="suspended">Suspendidas</option>
+              <option value="inactive">Inactivas</option>
+            </select>
+          </div>
+
+          <div class="field grow">
+            <label for="searchInput">Buscar</label>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Nombre, correo, teléfono, oficio, ciudad..."
+            >
+          </div>
+
+          <button type="button" class="btn btn-light" id="refreshBtn">Actualizar</button>
+        </div>
+
+        <div class="list" id="list"></div>
+
+      </div>
+
+      <!-- CURSOS -->
+      <div id="coursesSection" hidden>
+
+        <div id="courseListWrap">
+
+          <div class="toolbar">
+            <div class="field grow">
+              <label for="courseSearch">Buscar</label>
+              <input
+                type="search"
+                id="courseSearch"
+                placeholder="Título, instructor, categoría, ciudad..."
+              >
+            </div>
+
+            <button type="button" class="btn" id="newCourseBtn">+ Nuevo curso</button>
+            <button type="button" class="btn btn-light" id="refreshCoursesBtn">Actualizar</button>
+          </div>
+
+          <div class="list" id="courseList"></div>
+
+        </div>
+
+        <form id="courseForm" class="course-form" hidden novalidate>
+
+          <h2 id="courseFormTitle">Nuevo curso</h2>
+          <p class="hint">Los campos con * son obligatorios.</p>
+
+          <div class="form-grid">
+
+            <div class="field full">
+              <label for="c-instructor">Instructor (propuestas aprobadas o activas)</label>
+              <select id="c-instructor"></select>
+              <small>Al elegirlo se completan el nombre y la ciudad si están vacíos.</small>
+            </div>
+
+            <div class="field">
+              <label for="c-title">Título del curso *</label>
+              <input type="text" id="c-title" maxlength="120">
+            </div>
+
+            <div class="field">
+              <label for="c-tutor">Nombre de quien enseña *</label>
+              <input type="text" id="c-tutor" maxlength="100">
+            </div>
+
+            <div class="field">
+              <label for="c-category">Categoría *</label>
+              <select id="c-category"></select>
+            </div>
+
+            <div class="field">
+              <label for="c-subcategory">Subcategoría</label>
+              <input type="text" id="c-subcategory" maxlength="100" placeholder="Ej. Carpintería">
+            </div>
+
+            <div class="field">
+              <label for="c-location">Lugar (ciudad o municipio) *</label>
+              <input type="text" id="c-location" maxlength="100">
+            </div>
+
+            <div class="field">
+              <label for="c-level">Nivel</label>
+              <select id="c-level">
+                <option>Todos los niveles</option>
+                <option>Inicial</option>
+                <option>Intermedio</option>
+                <option>Avanzado</option>
+              </select>
+            </div>
+
+                        <div class="field">
+              <label for="c-type">Tipo *</label>
+              <select id="c-type">
+                <option value="Clase">Clase</option>
+                <option value="Taller">Taller</option>
+                <option value="Curso">Curso</option>
+                <option value="Seminario">Seminario</option>
+                <option value="Experiencia">Experiencia</option>
+                <option value="Masterclass">Masterclass</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="c-hours">Duración (máx. 160 horas)</label>
+              <input type="text" id="c-hours" maxlength="50" placeholder="Ej. 32 horas">
+            </div>
+
+            <div class="field">
+              <label for="c-schedule">Horario</label>
+              <input type="text" id="c-schedule" maxlength="120" placeholder="Ej. Sábados 8:00 a.m. a 12:00 m.">
+            </div>
+
+            <div class="field">
+              <label for="c-price">Precio en pesos (0 = Consultar)</label>
+              <input type="number" id="c-price" min="0" step="1" placeholder="Ej. 250000">
+            </div>
+
+            <div class="field">
+              <label for="c-spots">Cupos disponibles</label>
+              <input type="number" id="c-spots" min="0" step="1">
+            </div>
+
+            <div class="field full">
+              <label for="c-description">Descripción *</label>
+              <textarea id="c-description" rows="4" maxlength="2000"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="c-learning">¿Qué se aprende? (un ítem por línea)</label>
+              <textarea id="c-learning" rows="4"></textarea>
+            </div>
+
+            <div class="field full">
+              <label for="c-cal">Enlace de reservas (opcional)</label>
+              <input type="url" id="c-cal" placeholder="https://cal.com/..., https://calendly.com/..., etc.">
+              <small>Si lo dejas vacío, el estudiante te contactará por WhatsApp o correo.</small>
+            </div>
+
+            <div class="field full">
+              <label for="c-youtube">Video de YouTube (opcional)</label>
+              <input type="url" id="c-youtube" placeholder="https://www.youtube.com/watch?v=...">
+              <small>Acepta enlaces youtube.com/watch, youtu.be, shorts o embed.</small>
+            </div>
+
+            <div class="field full">
+              <label for="c-360">Foto 360° (opcional)</label>
+              <input type="text" id="c-360" placeholder="assets/img/cursos/mi-taller-360.jpg">
+              <small>Imagen panorámica equirrectangular (proporción 2:1). Puede ser una ruta o un enlace https.</small>
+            </div>
+
+            <div class="field full">
+              <label for="c-photos">Fotos del taller (una ruta por línea, la primera es portada)</label>
+              <textarea id="c-photos" rows="4" placeholder="assets/img/cursos/mi-foto-1.jpg
+assets/img/cursos/mi-foto-2.jpg"></textarea>
+              <small>Sube las fotos a <code>assets/img/cursos/</code> en el repositorio. Escribe aquí las rutas, una por línea.</small>
+              <div class="photo-grid" id="photoGrid"></div>
+            </div>
+
+            <div class="field full">
+              <label class="checkline">
+                <input type="checkbox" id="c-published">
+                Publicar en el sitio (necesita al menos una foto)
+              </label>
+            </div>
+
+          </div>
+
+          <p class="error" id="courseFormError" role="alert" hidden></p>
+
+          <div class="form-actions">
+            <button type="submit" class="btn" id="saveCourseBtn">Guardar curso</button>
+            <button type="button" class="btn btn-light" id="cancelCourseBtn">Cancelar</button>
+          </div>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    "use strict";
+
+    const MODO_LOCAL = false;
+
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbwOFOF6MjMwXtNshN2xctvH5uTox5pBZ_-C-H6V1kbTyOf_BNt3hRf4nxWik581Wysl/exec";
+
+    const TIMEOUT_MS = 15000;
+
+    const STATUS_LABELS = {
+      pending: "Pendiente",
+      approved: "Aprobada",
+      active: "Activa",
+      suspended: "Suspendida",
+      inactive: "Inactiva"
+    };
+
+    const KEY_STORAGE = "classtour_admin_key";
+
+    let adminKey = "";
+    let instructors = [];
+
+    const $ = (id) => document.getElementById(id);
+
+
+    /* ---------- Modo local ---------- */
+
+    async function apiLocal(path, options) {
+      console.info("[admin modo local]", path, options);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      if (path === "/api/instructors") {
+        return { status: 200, ok: true, data: { ok: true, total: 0, instructors: [] } };
+      }
+      if (path.startsWith("/api/admin/courses")) {
+        return { status: 200, ok: true, data: { ok: true, total: 0, courses: [] } };
+      }
+      return { status: 200, ok: true, data: { ok: true, message: "Modo local activo." } };
+    }
+
+
+    /* ---------- Almacenamiento de la clave ---------- */
+
+    function readStoredKey() {
+      try { return sessionStorage.getItem(KEY_STORAGE) || ""; } catch (e) { return ""; }
+    }
+
+    function storeKey(value) {
+      try {
+        if (value) sessionStorage.setItem(KEY_STORAGE, value);
+        else sessionStorage.removeItem(KEY_STORAGE);
+      } catch (e) { }
+    }
+
+
+    /* ---------- Utilidades ---------- */
+
+    function el(tag, props, children) {
+      const node = document.createElement(tag);
+      Object.entries(props || {}).forEach(([key, value]) => {
+        if (key === "class") node.className = value;
+        else if (key === "text") node.textContent = value;
+        else node.setAttribute(key, value);
+      });
+      (children || []).forEach((child) => {
+        if (child) node.append(child);
+      });
+      return node;
+    }
+
+    function normalize(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function formatDate(iso) {
+      if (!iso) return "—";
+      const date = new Date(iso);
+      if (Number.isNaN(date.getTime())) return "—";
+      return date.toLocaleString("es-CO", { dateStyle: "medium", timeStyle: "short" });
+    }
+
+    function whatsappNumber(phone) {
+      const raw = String(phone || "").trim();
+      const digits = raw.replace(/\D/g, "");
+      if (!digits) return "";
+      if (raw.startsWith("+")) return digits;
+      if (digits.length === 10 && digits.startsWith("3")) return "57" + digits;
+      return digits;
+    }
+
+    let toastTimer = null;
+
+    function toast(message, isError) {
+      const box = $("toast");
+      box.textContent = message;
+      box.classList.toggle("error-toast", Boolean(isError));
+      box.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => box.classList.remove("show"), 3500);
+    }
+
+
+    /* ---------- Llamadas al backend ---------- */
+
+    async function api(path, options) {
+
+      if (MODO_LOCAL) return await apiLocal(path, options);
+
+      const { timeoutMs, ...fetchOptions } = options || {};
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs || TIMEOUT_MS);
+
+      try {
+        let url = API_URL;
+        let body = null;
+        let method = (fetchOptions.method || "GET").toUpperCase();
+
+        if (method === "GET") {
+          if (path === "/api/instructors") {
+            url += "?action=admin/instructores&key=" + encodeURIComponent(adminKey);
+          } else if (path === "/api/admin/courses") {
+            url += "?action=admin/cursos&key=" + encodeURIComponent(adminKey);
+          }
+        } else {
+          const parsed = fetchOptions.body ? JSON.parse(fetchOptions.body) : {};
+          parsed.key = adminKey;
+
+          if (path === "/api/admin/courses" && method === "POST") {
+            parsed.tipo = "admin/cursos/crear";
+          } else if (path.match(/^\/api\/admin\/courses\/[^/]+$/) && method === "PUT") {
+            parsed.tipo = "admin/cursos/actualizar";
+            parsed.courseId = path.split("/").pop();
+          } else if (path.match(/^\/api\/admin\/courses\/[^/]+$/) && method === "DELETE") {
+            parsed.tipo = "admin/cursos/eliminar";
+            parsed.courseId = path.split("/").pop();
+          } else if (path.match(/^\/api\/admin\/courses\/[^/]+\/publish$/)) {
+            parsed.tipo = "admin/cursos/publicar";
+            parsed.courseId = path.split("/")[4];
+          } else if (path.match(/^\/api\/admin\/courses\/[^/]+\/photos$/)) {
+            parsed.tipo = "admin/cursos/foto/subir";
+            parsed.courseId = path.split("/")[4];
+          } else if (path.match(/^\/api\/admin\/courses\/[^/]+\/photos\/[^/]+$/)) {
+            parsed.tipo = "admin/cursos/foto/borrar";
+            parsed.courseId = path.split("/")[4];
+            parsed.photoId = path.split("/")[6];
+          } else if (path.match(/^\/api\/instructors\/[^/]+\/status$/)) {
+            parsed.tipo = "admin/instructores/estado";
+            parsed.instructorId = path.split("/")[3];
+          }
+
+          body = JSON.stringify(parsed);
+          method = "POST";
+        }
+
+        const response = await fetch(url, {
+          method,
+          body,
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          signal: controller.signal,
+          redirect: "follow"
+        });
+
+        const data = await response.json().catch(() => ({}));
+        return { status: response.status, ok: response.ok && data.ok !== false, data };
+
+      } catch (error) {
+        return {
+          status: 0,
+          ok: false,
+          data: {
+            mensaje: error.name === "AbortError"
+              ? "El servidor tardó demasiado en responder."
+              : "No se pudo conectar con el servidor."
+          }
+        };
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function errorMessage(result) {
+      return result.data.mensaje || result.data.message || "Ocurrió un error inesperado.";
+    }
+
+
+    /* ---------- Vistas ---------- */
+
+    function showLogin(message) {
+      $("panelView").hidden = true;
+      $("loginView").hidden = false;
+      $("logoutBtn").hidden = true;
+      const box = $("loginError");
+      box.hidden = !message;
+      box.textContent = message || "";
+    }
+
+    function showPanel() {
+      $("loginView").hidden = true;
+      $("panelView").hidden = false;
+      $("logoutBtn").hidden = false;
+      showTab("proposals");
+    }
+
+
+    /* ---------- Carga y filtros ---------- */
+
+    async function loadInstructors() {
+      const result = await api("/api/instructors");
+      if (!result.ok) return result;
+      instructors = (result.data.instructors || []).slice().sort(
+        (a, b) => String(b.createdAt).localeCompare(String(a.createdAt))
+      );
+      render();
+      return result;
+    }
+
+    function filtered() {
+      const status = $("statusFilter").value;
+      const query = normalize($("searchInput").value);
+      return instructors.filter((item) => {
+        if (status !== "all" && item.status !== status) return false;
+        if (!query) return true;
+        const text = normalize(
+          [item.name, item.email, item.phone, item.skill, item.category, item.location].join(" ")
+        );
+        return text.includes(query);
+      });
+    }
+
+    function renderSummary() {
+      const count = (status) => instructors.filter((i) => i.status === status).length;
+      const stats = [
+        ["Total", instructors.length],
+        ["Pendientes", count("pending")],
+        ["Aprobadas", count("approved")],
+        ["Activas", count("active")]
+      ];
+      const box = $("summary");
+      box.replaceChildren(
+        ...stats.map(([label, value]) =>
+          el("div", { class: "stat" }, [
+            el("b", { text: String(value) }),
+            el("span", { text: label })
+          ])
+        )
+      );
+    }
+
+    function render() {
+      renderSummary();
+      const items = filtered();
+      const list = $("list");
+      if (!items.length) {
+        list.replaceChildren(
+          el("div", {
+            class: "empty",
+            text: instructors.length
+              ? "Ninguna propuesta coincide con el filtro."
+              : "Todavía no hay propuestas."
+          })
+        );
+        return;
+      }
+      list.replaceChildren(...items.map(buildCard));
+    }
+
+
+    /* ---------- Tarjeta de propuesta ---------- */
+
+    function buildCard(item) {
+      const status = STATUS_LABELS[item.status] ? item.status : "pending";
+      const info = el("dl", { class: "info" });
+
+      function row(label, content) {
+        info.append(el("dt", { text: label }));
+        const dd = el("dd");
+        dd.append(content);
+        info.append(dd);
+      }
+
+      row("Correo", el("a", { href: "mailto:" + encodeURIComponent(item.email || ""), text: item.email || "—" }));
+
+      const phoneBox = document.createDocumentFragment();
+      phoneBox.append(document.createTextNode((item.phone || "—") + " "));
+      const wa = whatsappNumber(item.phone);
+      if (wa) {
+        phoneBox.append(
+          el("a", {
+            href: "https://wa.me/" + wa,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            text: "· WhatsApp"
+          })
+        );
+      }
+
+      row("Teléfono", phoneBox);
+      row("Oficio", document.createTextNode(item.skill || "—"));
+      row("Categoría", document.createTextNode(item.category || "—"));
+      row("Ubicación", document.createTextNode(item.location || "—"));
+      row("Recibida", document.createTextNode(formatDate(item.createdAt)));
+
+      row(
+        "Autorización",
+        document.createTextNode(
+          item.consent && item.consent.accepted
+            ? "Sí · " + formatDate(item.consent.at)
+            : "No registrada"
+        )
+      );
+
+      const experience = item.experience
+        ? el("details", {}, [
+            el("summary", { text: "Experiencia" }),
+            el("p", { text: item.experience })
+          ])
+        : null;
+
+      const select = el("select", { id: "status-" + item.id });
+      Object.entries(STATUS_LABELS).forEach(([value, label]) => {
+        const option = el("option", { value, text: label });
+        if (value === status) option.selected = true;
+        select.append(option);
+      });
+
+      select.addEventListener("change", async () => {
+        const newStatus = select.value;
+        const confirmed = window.confirm(
+          `¿Cambiar el estado de "${item.name}" a "${STATUS_LABELS[newStatus]}"?`
+        );
+        if (!confirmed) {
+          select.value = status;
+          return;
+        }
+        select.disabled = true;
+        const result = await api(
+          "/api/instructors/" + encodeURIComponent(item.id) + "/status",
+          { method: "PATCH", body: JSON.stringify({ status: newStatus }) }
+        );
+        if (result.ok) {
+          Object.assign(item, result.data.instructor || { status: newStatus });
+          render();
+          toast(`Estado actualizado a "${STATUS_LABELS[newStatus]}".`);
+        } else {
+          select.value = status;
+          select.disabled = false;
+          toast(errorMessage(result), true);
+        }
+      });
+
+      const statusField = el("div", { class: "field" }, [
+        el("label", { for: select.id, text: "Estado" }),
+        select
+      ]);
+
+      const actions = el("div", { class: "actions" }, [statusField]);
+
+      return el("article", { class: "card" }, [
+        el("div", { class: "card-head" }, [
+          el("h3", { text: item.name || "Sin nombre" }),
+          el("span", { class: "badge badge-" + status, text: STATUS_LABELS[status] })
+        ]),
+        info,
+        experience,
+        actions
+      ]);
+    }
+
+
+    /* ---------- Eventos de login ---------- */
+
+    $("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const key = $("keyInput").value.trim();
+      if (!key) {
+        showLogin("Escribe la clave.");
+        return;
+      }
+      const button = $("loginBtn");
+      button.disabled = true;
+      button.textContent = "Entrando...";
+      adminKey = key;
+      const result = await loadInstructors();
+      button.disabled = false;
+      button.textContent = "Entrar";
+      if (result.ok) {
+        storeKey(key);
+        $("keyInput").value = "";
+        showPanel();
+      } else {
+        adminKey = "";
+        showLogin(errorMessage(result));
+      }
+    });
+
+    $("showKey").addEventListener("change", (event) => {
+      $("keyInput").type = event.target.checked ? "text" : "password";
+    });
+
+    $("logoutBtn").addEventListener("click", () => {
+      adminKey = "";
+      instructors = [];
+      storeKey("");
+      showLogin("");
+    });
+
+    $("refreshBtn").addEventListener("click", async () => {
+      const result = await loadInstructors();
+      toast(result.ok ? "Lista actualizada." : errorMessage(result), !result.ok);
+    });
+
+    $("statusFilter").addEventListener("change", render);
+    $("searchInput").addEventListener("input", render);
+
+
+    /* ==========================================================
+       CURSOS
+    ========================================================== */
+
+    const CATEGORIES = [
+      "Actividades al aire libre", "Arquitectura", "Arte", "Artes escénicas",
+      "Artesanías", "Baile y danzas", "Barista", "Bodas y eventos", "Bebidas",
+      "Cinematografía", "Moda", "Diseño", "Escultura", "Equitación y Vaulting",
+      "Fotografía", "Gastronomía", "Historieta", "Literatura e Historia",
+      "Manualidades", "Multimedia", "Metales y mecánica", "Música", "Negocios",
+      "Enología", "Restauraciones", "Sexualidad", "Tatuajes",
+      "Cursos libres de oficios"
+    ];
+
+    const MAX_PHOTOS = 8;
+
+    let adminCourses = [];
+    let editingCourse = null;
+    let photoItems = [];
+    let removedPhotoIds = [];
+    let photoCounter = 0;
+
+    const enc = encodeURIComponent;
+
+    function showTab(name) {
+      const isCourses = name === "courses";
+      $("proposalsSection").hidden = isCourses;
+      $("coursesSection").hidden = !isCourses;
+      $("tabProposals").setAttribute("aria-selected", String(!isCourses));
+      $("tabCourses").setAttribute("aria-selected", String(isCourses));
+      if (isCourses) {
+        closeCourseForm();
+        loadAdminCourses();
+      }
+    }
+
+    function formatPrice(price) {
+      if (!price) return "Precio: consultar";
+      return new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        maximumFractionDigits: 0
+      }).format(price);
+    }
+
+    async function loadAdminCourses() {
+      const result = await api("/api/admin/courses");
+      if (!result.ok) {
+        toast(errorMessage(result), true);
+        return result;
+      }
+      adminCourses = result.data.courses || [];
+      renderAdminCourses();
+      return result;
+    }
+
+    function renderAdminCourses() {
+      const query = normalize($("courseSearch").value);
+      const items = adminCourses.filter((course) => {
+        if (!query) return true;
+        return normalize(
+          [course.title, course.tutor, course.category, course.location].join(" ")
+        ).includes(query);
+      });
+
+      const list = $("courseList");
+
+      if (!items.length) {
+        list.replaceChildren(
+          el("div", {
+            class: "empty",
+            text: adminCourses.length
+              ? "Ningún curso coincide con la búsqueda."
+              : "Todavía no hay cursos. Pulsa \"+ Nuevo curso\" para crear el primero."
+          })
+        );
+        return;
+      }
+
+      list.replaceChildren(...items.map(buildCourseCard));
+    }
+
+    function buildCourseCard(course) {
+      const firstPhoto = course.photos && course.photos.length ? course.photos[0] : null;
+      const cover = firstPhoto
+        ? el("img", { class: "course-cover", src: firstPhoto.url, alt: "" })
+        : el("div", { class: "course-cover", text: "Sin foto" });
+
+      const editBtn = el("button", { type: "button", class: "btn btn-light btn-small", text: "Editar" });
+      editBtn.addEventListener("click", () => openCourseForm(course));
+
+      const publishBtn = el("button", {
+        type: "button",
+        class: "btn btn-light btn-small",
+        text: course.published ? "Ocultar" : "Publicar"
+      });
+
+      publishBtn.addEventListener("click", async () => {
+        publishBtn.disabled = true;
+        const result = await api(
+          "/api/admin/courses/" + enc(course.id) + "/publish",
+          { method: "PATCH", body: JSON.stringify({ published: !course.published }) }
+        );
+        publishBtn.disabled = false;
+        if (result.ok) {
+          Object.assign(course, result.data.course);
+          renderAdminCourses();
+          toast(result.data.mensaje || "Actualizado.");
+        } else {
+          toast(errorMessage(result), true);
+        }
+      });
+
+      const deleteBtn = el("button", { type: "button", class: "btn btn-danger btn-small", text: "Eliminar" });
+      deleteBtn.addEventListener("click", async () => {
+        const confirmed = window.confirm(
+          `¿Eliminar el curso "${course.title}"? Esta acción no se puede deshacer.`
+        );
+        if (!confirmed) return;
+        deleteBtn.disabled = true;
+        const result = await api("/api/admin/courses/" + enc(course.id), { method: "DELETE" });
+        if (result.ok) {
+          adminCourses = adminCourses.filter((item) => item.id !== course.id);
+          renderAdminCourses();
+          toast("Curso eliminado.");
+        } else {
+          deleteBtn.disabled = false;
+          toast(errorMessage(result), true);
+        }
+      });
+
+      const photoCount = course.photos ? course.photos.length : 0;
+
+      return el("article", { class: "course-card" }, [
+        cover,
+        el("div", { class: "course-body" }, [
+          el("div", { class: "course-head" }, [
+            el("h3", { text: course.title }),
+            el("span", {
+              class: "badge " + (course.published ? "badge-published" : "badge-draft"),
+              text: course.published ? "Publicado" : "Borrador"
+            })
+          ]),
+          el("p", { text: `${course.courseType || "Clase"} · ${course.tutor} · ${course.category}` }),
+          el("p", { text: `${course.location} · ${formatPrice(course.price)} · ${photoCount} foto(s)` }),
+          el("div", { class: "course-actions" }, [editBtn, publishBtn, deleteBtn])
+        ])
+      ]);
+    }
+
+
+    /* ---------- Formulario ---------- */
+
+    function fillSelect(select, entries, selected) {
+      select.replaceChildren(
+        ...entries.map(([value, label]) => {
+          const option = el("option", { value, text: label });
+          if (value === selected) option.selected = true;
+          return option;
+        })
+      );
+    }
+
+    function openCourseForm(course) {
+      editingCourse = course || null;
+      removedPhotoIds = [];
+
+      $("courseFormTitle").textContent = course ? "Editar curso" : "Nuevo curso";
+      $("courseFormError").hidden = true;
+
+      const approved = instructors.filter(
+        (item) => item.status === "approved" || item.status === "active"
+      );
+
+      fillSelect(
+        $("c-instructor"),
+        [["", "Sin instructor vinculado (escribo el nombre a mano)"]].concat(
+          approved.map((item) => [item.id, `${item.name} — ${item.skill}${item.location ? " (" + item.location + ")" : ""}`])
+        ),
+        course && course.instructorId ? course.instructorId : ""
+      );
+
+      fillSelect(
+        $("c-category"),
+        [["", "Selecciona una categoría"]].concat(CATEGORIES.map((name) => [name, name])),
+        course ? course.category : ""
+      );
+
+      const set = (id, value) => { $(id).value = value === null || value === undefined ? "" : value; };
+
+      set("c-title", course ? course.title : "");
+      set("c-tutor", course ? course.tutor : "");
+      set("c-subcategory", course ? course.subcategory : "");
+      set("c-location", course ? course.location : "");
+      set("c-level", course ? course.level : "Todos los niveles");
+      set("c-type", course ? course.courseType : "");
+      set("c-hours", course ? course.hours : "");
+      set("c-schedule", course ? course.schedule : "");
+      set("c-price", course ? course.price : "");
+      set("c-spots", course ? course.spots : "");
+      set("c-description", course ? course.description : "");
+      set("c-learning", course ? (course.learning || []).join("\n") : "");
+      set("c-cal", course ? (course.calUrl || "") : "");
+      set("c-youtube", course ? course.youtubeUrl : "");
+      set("c-360", course ? course.photo360 : "");
+      $("c-published").checked = course ? course.published : false;
+
+
+      photoItems = course
+        ? (course.photos || []).map((photo) => ({
+            key: ++photoCounter,
+            id: photo.id,
+            url: photo.url
+          }))
+        : [];
+
+      $("c-photos").value = photoItems.map(item => item.url).join("\n");
+
+      renderPhotoGrid();
+
+      $("courseListWrap").hidden = true;
+      $("courseForm").hidden = false;
+      $("c-title").focus();
+    }
+
+    function closeCourseForm() {
+      $("courseForm").hidden = true;
+      $("courseListWrap").hidden = false;
+      editingCourse = null;
+      photoItems = [];
+      removedPhotoIds = [];
+    }
+
+    function renderPhotoGrid() {
+      const grid = $("photoGrid");
+
+      if (!photoItems.length) {
+        grid.replaceChildren();
+        return;
+      }
+
+      grid.replaceChildren(
+        ...photoItems.map((item, index) => {
+          const removeBtn = el("button", { type: "button", class: "btn btn-danger", text: "Quitar" });
+
+          removeBtn.addEventListener("click", () => {
+  if (item.id) {
+    removedPhotoIds.push(item.id);
+  }
+
+  photoItems.splice(index, 1);
+
+  syncPhotoTextarea();
+  renderPhotoGrid();
+});
+
+          return el("div", { class: "photo-item" }, [
+            el("img", { src: item.url, alt: `Foto ${index + 1}` }),
+            index === 0 ? el("span", { class: "cover-flag", text: "Portada" }) : null,
+            el("div", { class: "photo-actions" }, [removeBtn])
+          ]);
+        })
+      );
+    }
+
+    function syncPhotoTextarea() {
+      $("c-photos").value = photoItems.map(item => item.url || "").join("\n");
+    }
+
+    function getYoutubeId(url) {
+      try {
+        const u = new URL(String(url || "").trim());
+        const host = u.hostname.replace(/^www\.|^m\./, "");
+        let id = null;
+        if (host === "youtu.be") {
+          id = u.pathname.slice(1);
+        } else if (host === "youtube.com" || host === "music.youtube.com") {
+          if (u.pathname === "/watch") {
+            id = u.searchParams.get("v");
+          } else {
+            const m = u.pathname.match(/^\/(embed|shorts|live)\/([^/?]+)/);
+            if (m) id = m[2];
+          }
+        }
+        return id && /^[\w-]{11}$/.test(id) ? id : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+        function readCourseForm() {
+      const value = (id) => $(id).value.trim();
+
+      return {
+        instructorId: $("c-instructor").value,
+        title: value("c-title"),
+        tutor: value("c-tutor"),
+        category: $("c-category").value,
+        subcategory: value("c-subcategory"),
+        location: value("c-location"),
+        level: $("c-level").value,
+        courseType: $("c-type").value,
+        hours: value("c-hours"),
+        schedule: value("c-schedule"),
+        price: value("c-price") === "" ? 0 : Number(value("c-price")),
+        spots: value("c-spots") === "" ? null : Number(value("c-spots")),
+        description: value("c-description"),
+        learning: $("c-learning").value,
+        calUrl: value("c-cal"),
+        youtubeUrl: value("c-youtube"),
+        photo360: value("c-360").replace(/\\/g, "/"),
+        published: $("c-published").checked
+      };
+    }
+
+        function courseFormProblem(data) {
+      if (data.title.length < 3) return "Escribe el título del curso (mínimo 3 letras).";
+      if (data.tutor.length < 2) return "Escribe el nombre de quien enseña.";
+      if (!data.category) return "Selecciona una categoría.";
+      if (!data.courseType) return "Selecciona si es una clase o un taller.";
+      if (!data.location) return "Escribe el lugar donde se dicta el curso.";
+      if (data.description.length < 10) return "Escribe una descripción (mínimo 10 letras).";
+      if (data.calUrl && !/^https:\/\//i.test(data.calUrl)) return "El enlace de reservas debe empezar por https://";
+      if (data.youtubeUrl && !getYoutubeId(data.youtubeUrl)) {
+        return "El enlace de YouTube no es válido. Pega la URL completa del video.";
+      }
+
+      if (data.photo360 &&
+          !(/^https:\/\//i.test(data.photo360) || /\.(jpe?g|png|webp)$/i.test(data.photo360))) {
+        return "La foto 360° debe ser un enlace https o una ruta a un archivo .jpg, .png o .webp.";
+      }
+
+      if (data.hours) {
+        const match = String(data.hours).match(/\d+/);
+        if (match && Number(match[0]) > 160) {
+          return "La duración no puede superar 160 horas (curso libre).";
+        }
+      }
+
+      if (data.published && photoItems.length === 0) {
+        return "Para publicar el curso agrega al menos una foto (ruta).";
+      }
+
+      return "";
+    }
+    async function saveCourse(event) {
+      event.preventDefault();
+
+      const errorBox = $("courseFormError");
+      errorBox.hidden = true;
+
+      const fail = (message) => {
+        errorBox.textContent = message;
+        errorBox.hidden = false;
+        errorBox.scrollIntoView({ block: "nearest" });
+      };
+
+          const data = readCourseForm();
+      const problem = courseFormProblem(data);
+
+      if (problem) {
+        fail(problem);
+        return;
+      }
+
+      const button = $("saveCourseBtn");
+      button.disabled = true;
+      button.textContent = "Guardando...";
+
+      try {
+        // 1) Crear el curso si es nuevo (siempre como borrador)
+        let course = editingCourse;
+
+        if (!course) {
+          const created = await api("/api/admin/courses", {
+            method: "POST",
+            body: JSON.stringify({ ...data, published: false })
+          });
+
+          if (!created.ok) {
+            fail(errorMessage(created));
+            return;
+          }
+
+          course = created.data.course;
+          editingCourse = course;
+        }
+
+        // 2) Borrar fotos eliminadas (no aplica a rutas locales)
+        for (const id of removedPhotoIds.slice()) {
+          if (id.startsWith("path-")) continue;
+          await api(
+            "/api/admin/courses/" + enc(course.id) + "/photos/" + enc(id),
+            { method: "DELETE" }
+          );
+          removedPhotoIds = removedPhotoIds.filter((item) => item !== id);
+        }
+
+        // 3) Guardar las rutas de fotos nuevas
+        const savedPaths = new Set();
+
+        for (const item of photoItems) {
+          if (item.id && !item.id.startsWith("path-")) {
+            savedPaths.add(item.url);
+            continue;
+          }
+
+          const upload = await api(
+            "/api/admin/courses/" + enc(course.id) + "/photos",
+            { method: "POST", body: JSON.stringify({ path: item.url }) }
+          );
+
+          if (!upload.ok) {
+            fail("No se pudo guardar una ruta de foto: " + errorMessage(upload));
+            return;
+          }
+
+          savedPaths.add(item.url);
+        }
+
+        // 4) Guardar los datos del curso
+        const saved = await api("/api/admin/courses/" + enc(course.id), {
+          method: "PUT",
+          body: JSON.stringify({ ...data })
+        });
+
+        if (!saved.ok) {
+          fail(errorMessage(saved));
+          return;
+        }
+
+        toast("Curso guardado.");
+        closeCourseForm();
+        await loadAdminCourses();
+
+      } finally {
+        button.disabled = false;
+        button.textContent = "Guardar curso";
+      }
+    }
+      /* ---------- Eventos de cursos ---------- */
+
+    $("tabProposals").addEventListener("click", () => showTab("proposals"));
+    $("tabCourses").addEventListener("click", () => showTab("courses"));
+    $("newCourseBtn").addEventListener("click", () => openCourseForm(null));
+    $("courseSearch").addEventListener("input", renderAdminCourses);
+
+    $("refreshCoursesBtn").addEventListener("click", async () => {
+      const result = await loadAdminCourses();
+      if (result.ok) toast("Lista actualizada.");
+    });
+
+    $("courseForm").addEventListener("submit", saveCourse);
+
+    $("cancelCourseBtn").addEventListener("click", () => {
+      closeCourseForm();
+    });
+
+    $("c-instructor").addEventListener("change", () => {
+      const item = instructors.find((entry) => entry.id === $("c-instructor").value);
+      if (!item) return;
+      if (!$("c-tutor").value.trim()) $("c-tutor").value = item.name || "";
+      if (!$("c-location").value.trim()) $("c-location").value = item.location || "";
+      if (!$("c-category").value && CATEGORIES.includes(item.category)) {
+        $("c-category").value = item.category;
+      }
+    });
+
+    $("c-photos").addEventListener("input", (event) => {
+      const lines = event.target.value
+        .split("\n")
+        .map(l => l.trim().replace(/\\/g, "/"))
+        .filter(Boolean)
+        .slice(0, MAX_PHOTOS);
+
+      photoItems = lines.map((path, index) => ({
+        key: ++photoCounter,
+        id: "path-" + index,
+        url: path
+      }));
+
+      renderPhotoGrid();
+    });
+
+
+    /* ---------- Inicio ---------- */
+
+    (async function init() {
+      if (MODO_LOCAL) {
+        showPanel();
+        return;
+      }
+
+      const stored = readStoredKey();
+
+      if (!stored) {
+        showLogin("");
+        return;
+      }
+
+      adminKey = stored;
+      const result = await loadInstructors();
+
+      if (result.ok) {
+        showPanel();
+      } else {
+        adminKey = "";
+        storeKey("");
+        showLogin(errorMessage(result));
+      }
+    })();
+  </script>
+
+</body>
+</html>

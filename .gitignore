@@ -1,0 +1,47 @@
+# Dependencias
+node_modules/
+
+# Variables de entorno y claves
+.env
+.env.*
+*.pem
+*.key
+
+# Archivos temporales
+*.tmp
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Office (temporales de Word/Excel)
+~$*
+
+# Archivos de trabajo (diseño, copias, comprimidos)
+*.psd
+*.zip
+*.rar
+*.bak
+*.old
+Copia de *
+
+# Datos sensibles del backend (si lo usas)
+backend/data/
+backend/uploads/
+
+# Build
+dist/
+build/
+backend/
+fiveserver.config.js
+package.json
+package-lock.json
