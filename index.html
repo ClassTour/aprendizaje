@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="CLASS TOUR - Aprende, enseña y comparte conocimientos prácticos."
+  >
+
+  <meta name="theme-color" content="#173f32">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23173f32'/%3E%3Ctext x='32' y='43' font-family='Georgia,serif' font-size='30' font-weight='700' text-anchor='middle' fill='%23f7f5ef'%3ECT%3C/text%3E%3C/svg%3E">
+
+  <!-- Al compartir el enlace (WhatsApp, redes) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CLASS TOUR">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:title" content="CLASS TOUR | Aprende. Emprende. Progresa.">
+  <meta
+    property="og:description"
+    content="Conecta con personas que tienen un oficio, una técnica o un conocimiento para compartir."
+  >
+  <!--
+    Cuando publiques el sitio, agrega también:
+    <meta property="og:url" content="https://TU-DOMINIO/">
+    <meta property="og:image" content="https://TU-DOMINIO/assets/img/og-classtour.jpg">
+    <link rel="canonical" href="https://TU-DOMINIO/">
+    (la imagen og debe medir aprox. 1200 x 630 px)
+  -->
+
+  <title>CLASS TOUR | Aprende. Emprende. Progresa.</title>
+
+  <link
+    rel="stylesheet"
+    href="css/styles.css"
+  >
+
+  <style>
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .site-header {
+      transition:
+        transform 0.35s ease,
+        opacity 0.35s ease;
+      z-index: 1000;
+    }
+
+    .header-hidden {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .header-visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .header-tools {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+
+    /* =========================================================
+       TOP BAR
+    ========================================================= */
+
+    #topBar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #topBar a {
+      text-decoration: none;
+    }
+
+
+    /* =========================================================
+       CATEGORY DROPDOWN
+    ========================================================= */
+
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-dropdown-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      font: inherit;
+    }
+
+    .nav-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+
+      min-width: 280px;
+      max-width: 360px;
+      max-height: 70vh;
+      overflow-y: auto;
+
+      padding: 10px;
+
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+
+      z-index: 2000;
+    }
+
+    .nav-dropdown-menu.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .categoria-opcion {
+      width: 100%;
+      display: block;
+
+      padding: 10px 12px;
+      margin: 2px 0;
+
+      border: 0;
+      border-radius: 9px;
+
+      background: transparent;
+      color: inherit;
+
+      text-align: left;
+      font: inherit;
+
+      cursor: pointer;
+    }
+
+    .categoria-opcion:hover,
+    .categoria-opcion:focus-visible {
+      background: rgba(23, 63, 50, 0.08);
+      outline: none;
+    }
+
+    .dropdown-arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-dropdown-btn[aria-expanded="true"] .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+
+    /* =========================================================
+       OFICIOS
+    ========================================================= */
+
+    .oficio {
+      cursor: pointer;
+    }
+
+    .oficio:focus-visible {
+      outline: 3px solid rgba(23, 63, 50, 0.35);
+      outline-offset: 3px;
+    }
+
+
+    /* =========================================================
+       BOTONES DE "QUIERO ENSEÑAR"
+    ========================================================= */
+
+    [data-teach-trigger] {
+      cursor: pointer;
+    }
+
+
+    /* =========================================================
+       UTILIDADES
+    ========================================================= */
+
+    .hidden {
+      display: none !important;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 900px) {
+
+      .header-tools {
+        gap: 8px;
+      }
+
+      .nav-dropdown-menu {
+        left: auto;
+        right: 0;
+        transform: translateY(-8px);
+      }
+
+      .nav-dropdown-menu.open {
+        transform: translateY(0);
+      }
+
+    }
+
+
+    @media (max-width: 700px) {
+
+      .nav-dropdown-menu {
+        position: fixed;
+        top: 70px;
+        left: 10px;
+        right: 10px;
+
+        width: auto;
+        max-width: none;
+
+        transform: translateY(-8px);
+      }
+
+      .nav-dropdown-menu.open {
+        transform: translateY(0);
+      }
+
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =======================================================
+       HEADER
+  ======================================================== -->
+
+  <header
+    class="site-header header-visible"
+    id="siteHeader"
+  >
+
+    <div class="header-inner">
+
+
+      <!-- LOGO -->
+
+      <a
+        href="index.html"
+        class="brand"
+        aria-label="CLASS TOUR - Inicio"
+      >
+
+        <img
+          src="assets/img/logo-classtour.png"
+          alt="CLASS TOUR"
+        >
+
+      </a>
+
+
+      <!-- HERRAMIENTAS DEL HEADER -->
+
+      <div class="header-tools">
+
+
+        <!-- REDES SOCIALES -->
+
+               <div
+          id="topBar"
+          aria-label="Redes sociales"
+        >
+          <a
+            href="https://www.facebook.com/profile.php?id=61594292883272"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+            title="Facebook"
+            class="social-btn social-fb"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+
+          <a
+            href="https://www.instagram.com/classtouraprendizaje/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+            title="Instagram"
+            class="social-btn social-ig"
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.351-.2 6.78-2.618 6.98-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+
+        </div>
+
+        <!-- NAVEGACIÓN -->
+
+        <button
+          type="button"
+          class="nav-toggle"
+          id="navToggle"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+          aria-controls="mainNav"
+        >
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+          <span class="nav-toggle-bar"></span>
+        </button>
+
+        <nav
+          class="desktop-nav"
+          id="mainNav"
+          aria-label="Navegación principal"
+        >
+
+          <a href="index.html">
+            Inicio
+          </a>
+
+          <a href="nosotros.html">
+            Nosotros
+          </a>
+
+
+          <!-- CATEGORÍAS -->
+
+          <div class="nav-dropdown">
+
+            <button
+              type="button"
+              class="nav-dropdown-btn"
+              id="categoriasBtn"
+              aria-expanded="false"
+              aria-controls="categoriasMenu"
+            >
+
+              Categorías
+
+              <span
+                class="dropdown-arrow"
+                aria-hidden="true"
+              >
+                ▼
+              </span>
+
+            </button>
+
+
+            <!--
+              IMPORTANTE:
+              app.js genera automáticamente aquí
+              las 28 categorías principales.
+            -->
+
+            <div
+              class="nav-dropdown-menu"
+              id="categoriasMenu"
+              role="menu"
+              aria-hidden="true"
+            ></div>
+
+          </div>
+
+
+          <!-- QUIERO APRENDER -->
+
+          <a href="#destacados">
+            Quiero aprender
+          </a>
+
+
+          <!-- QUIERO ENSEÑAR -->
+
+          <a
+            href="#ensenar"
+            data-teach-trigger
+            aria-label="Abrir formulario para enseñar en CLASS TOUR"
+          >
+            Quiero enseñar
+          </a>
+
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- =======================================================
+       HERO / INICIO
+  ======================================================== -->
+
+  <main>
+
+
+    <section
+      class="hero"
+      id="inicio"
+    >
+
+      <div class="hero-content">
+
+        <p class="hero-eyebrow">
+          CLASS TOUR
+        </p>
+
+        <h1>
+          Aprende. Emprende. Progresa.
+        </h1>
+
+        <p>
+          Conecta con personas que tienen un oficio,
+          una técnica o un conocimiento para compartir.
+        </p>
+
+
+        <!-- BUSCADOR -->
+
+        <form
+          id="searchForm"
+          class="search-form"
+          role="search"
+        >
+
+          <div class="search-field">
+
+            <label
+              for="searchInput"
+              class="sr-only"
+            >
+              ¿Qué quieres aprender?
+            </label>
+
+            <input
+              type="search"
+              id="searchInput"
+              name="search"
+              placeholder="¿Qué quieres aprender?"
+              autocomplete="off"
+            >
+
+          </div>
+
+
+          <div class="search-field">
+
+            <label
+              for="locationSelect"
+              class="sr-only"
+            >
+              Selecciona una ubicación
+            </label>
+
+            <select
+              id="locationSelect"
+              name="location"
+            >
+
+              <option value="">
+                Todas las ubicaciones
+              </option>
+
+              <option value="Chía">
+                Chía
+              </option>
+              
+              <option value="Tabio">
+                Tabio
+              </option>
+
+              <option value="Tenjo">
+                Tenjo
+              </option>
+              
+              <option value="Cajica">
+                Cajica
+              </option>
+
+              <option value="Bogotá">
+                Bogotá
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <button type="submit">
+            Buscar
+          </button>
+
+        </form>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         OFICIOS
+    ====================================================== -->
+
+    <section
+      class="oficios-section"
+      aria-labelledby="oficiosTitle"
+    >
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          Explora
+        </p>
+
+        <h2 id="oficiosTitle">
+          Oficios que puedes aprender
+        </h2>
+
+      </div>
+
+
+      <div
+        class="oficios-marquee"
+        aria-label="Explorar oficios"
+      >
+
+        <div class="oficios-track">
+
+
+          <!-- PRIMER GRUPO -->
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Cuero"
+          >
+
+            <img
+              src="assets/img/artesano_de_cuero.jpg"
+              alt="Cuero" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Cuero
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Tango"
+          >
+
+            <img
+              src="assets/img/baile_tango.jpg"
+              alt="Tango" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Tango
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Ballet"
+          >
+
+            <img
+              src="assets/img/ballet.jpg"
+              alt="Ballet" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Ballet
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Madera"
+          >
+
+            <img
+              src="assets/img/cepillo_madera.jpg"
+              alt="Madera" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Madera
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Cerámica"
+          >
+
+            <img
+              src="assets/img/ceramica.jpg"
+              alt="Cerámica" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Cerámica
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Dibujo"
+          >
+
+            <img
+              src="assets/img/dibujo.jpg"
+              alt="Dibujo" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Dibujo
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Enología"
+          >
+
+            <img
+              src="assets/img/enologo.jpg"
+              alt="Enología" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Enología
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Fotografía"
+          >
+
+            <img
+              src="assets/img/fotografia.jpg"
+              alt="Fotografía" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Fotografía
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Música"
+          >
+
+            <img
+              src="assets/img/musicos.jpg"
+              alt="Música" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Música
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Ornamentación"
+          >
+
+            <img
+              src="assets/img/ornamentador.jpg"
+              alt="Ornamentación" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Ornamentación
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Pintura"
+          >
+
+            <img
+              src="assets/img/pintura.jpg"
+              alt="Pintura" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Pintura
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Tatuajes"
+          >
+
+            <img
+              src="assets/img/tatuador.jpg"
+              alt="Tatuajes" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Tatuajes
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Tejidos"
+          >
+
+            <img
+              src="assets/img/tejidos.jpg"
+              alt="Tejidos" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Tejidos
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Yoga"
+          >
+
+            <img
+              src="assets/img/yoga.jpg"
+              alt="Yoga" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Yoga
+            </span>
+
+          </button>
+
+
+          <!-- SEGUNDO GRUPO (duplicado para el marquee) -->
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Cuero"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/artesano_de_cuero.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Cuero
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Tango"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/baile_tango.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Tango
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Ballet"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/ballet.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Ballet
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Madera"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/cepillo_madera.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Madera
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Cerámica"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/ceramica.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Cerámica
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Dibujo"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/dibujo.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Dibujo
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Enología"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/enologo.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Enología
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Fotografía"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/fotografia.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Fotografía
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Música"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/musicos.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Música
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Ornamentación"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/ornamentador.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Ornamentación
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Pintura"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/pintura.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Pintura
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Tatuajes"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/tatuador.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Tatuajes
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Tejidos"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/tejidos.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Tejidos
+            </span>
+
+          </button>
+
+
+          <button
+            class="oficio oficio-card"
+            type="button"
+            data-oficio="Yoga"
+            aria-hidden="true"
+            tabindex="-1"
+          >
+
+            <img
+              src="assets/img/yoga.jpg"
+              alt="" loading="lazy" decoding="async"
+            >
+
+            <span>
+              Yoga
+            </span>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CATEGORÍAS
+    ====================================================== -->
+
+    <section
+      class="categories-section"
+      id="categorias"
+      aria-labelledby="categoriasTitle"
+    >
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          Encuentra tu camino
+        </p>
+
+        <h2 id="categoriasTitle">
+          Explora nuestras categorías
+        </h2>
+
+        <p>
+          Descubre conocimientos, oficios y experiencias
+          para aprender de personas que saben hacer.
+        </p>
+
+      </div>
+
+
+      <!--
+        app.js genera aquí las 28 categorías principales.
+      -->
+
+      <div
+        id="categoryGrid"
+        class="category-grid"
+      ></div>
+
+
+      <div class="section-actions">
+
+        <button
+          type="button"
+          id="allCategoriesBtn"
+        >
+          Ver todas las categorías
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CURSOS DESTACADOS
+    ====================================================== -->
+
+    <section
+      class="courses-section"
+      id="destacados"
+      aria-labelledby="destacadosTitle"
+    >
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          Aprende haciendo
+        </p>
+
+        <h2 id="destacadosTitle">
+          Cursos destacados
+        </h2>
+
+        <p>
+          Encuentra experiencias prácticas guiadas
+          por personas con conocimientos reales.
+        </p>
+
+      </div>
+
+
+      <div
+        id="courseGrid"
+        class="course-grid"
+      ></div>
+
+
+      <div
+        id="emptyState"
+        class="empty-state hidden"
+      >
+
+        <h3>
+          No encontramos cursos
+        </h3>
+
+        <p>
+          Intenta cambiar tu búsqueda o explorar
+          todas las opciones disponibles.
+        </p>
+
+        <button
+          type="button"
+          id="clearSearchBtn"
+        >
+          Limpiar búsqueda
+        </button>
+
+      </div>
+
+
+      <div class="section-actions">
+
+        <button
+          type="button"
+          id="showAllBtn"
+        >
+          Mostrar todos los cursos
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CÓMO FUNCIONA
+    ====================================================== -->
+
+    <section
+      class="how-section"
+      aria-labelledby="howTitle"
+    >
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          Así de fácil
+        </p>
+
+        <h2 id="howTitle">
+          ¿Cómo funciona CLASS TOUR?
+        </h2>
+
+      </div>
+
+
+      <div class="how-grid">
+
+        <article class="how-card">
+
+          <span class="how-number" aria-hidden="true">1</span>
+
+          <h3>
+            Explora
+          </h3>
+
+          <p>
+            Busca el oficio, conocimiento o actividad
+            que quieres aprender.
+          </p>
+
+        </article>
+
+
+        <article class="how-card">
+
+          <span class="how-number" aria-hidden="true">2</span>
+
+          <h3>
+            Conecta
+          </h3>
+
+          <p>
+            Conoce a personas que tienen experiencia
+            y quieren compartir lo que saben.
+          </p>
+
+        </article>
+
+
+        <article class="how-card">
+
+          <span class="how-number" aria-hidden="true">3</span>
+
+          <h3>
+            Aprende
+          </h3>
+
+          <p>
+            Reserva tu cupo y aprende directamente
+            desde la experiencia práctica.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUIERO ENSEÑAR
+    ====================================================== -->
+
+    <section
+      class="teacher-section"
+      id="ensenar"
+      aria-labelledby="teachTitle"
+    >
+
+      <div class="teacher-content">
+
+        <p class="eyebrow">
+          Comparte lo que sabes
+        </p>
+
+        <h2 id="teachTitle">
+          ¿Tienes un oficio o conocimiento
+          que quieras enseñar?
+        </h2>
+
+        <p>
+          CLASS TOUR busca conectar personas que saben hacer
+          con quienes quieren aprender. Comparte tu experiencia,
+          tu técnica y tus conocimientos.
+        </p>
+
+
+        <button
+          type="button"
+          id="teachBtn"
+        >
+          Quiero enseñar
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CONFIANZA
+    ====================================================== -->
+
+    <section
+      class="trust-section"
+      aria-labelledby="trustTitle"
+    >
+
+      <div class="section-heading">
+
+        <p class="eyebrow">
+          Comunidad
+        </p>
+
+        <h2 id="trustTitle">
+          Aprender de quien sabe hacer
+        </h2>
+
+        <p>
+          CLASS TOUR nace para acercar el conocimiento práctico
+          a las personas y fortalecer una comunidad donde
+          aprender y enseñar tengan valor.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- =======================================================
+       FOOTER
+  ======================================================== -->
+
+  <footer class="site-footer">
+
+    <div class="footer-inner">
+
+
+      <!-- MARCA -->
+
+      <div class="footer-brand">
+
+        <a
+          href="index.html"
+          aria-label="CLASS TOUR - Inicio"
+        >
+
+          <img
+            src="assets/img/logo-classtour.png"
+            alt="CLASS TOUR"
+          >
+
+        </a>
+
+        <p>
+          Aprende. Emprende. Progresa.
+        </p>
+
+        <p>
+          Una plataforma de economía colaborativa para conectar conocimiento,
+  personas y oportunidades.
+        </p>
+
+      </div>
+
+
+      <!-- CLASS TOUR -->
+
+      <div class="footer-column">
+
+        <h3>
+          CLASS TOUR
+        </h3>
+
+        <a href="index.html">
+          Inicio
+        </a>
+
+        <a href="nosotros.html">
+          Nosotros
+        </a>
+
+        <a href="#destacados">
+          Quiero aprender
+        </a>
+
+        <a
+          href="#ensenar"
+          data-teach-trigger
+        >
+          Quiero enseñar
+        </a>
+
+      </div>
+
+
+      <!-- COMUNIDAD -->
+
+      <div class="footer-column">
+
+        <h3>
+          Comunidad
+        </h3>
+
+        <button
+          type="button"
+          id="footerRegisterBtn"
+        >
+          Regístrate
+        </button>
+
+        <a
+          href="#ensenar"
+          data-teach-trigger
+        >
+          Comparte tu conocimiento
+        </a>
+
+      </div>
+
+
+      <!-- LEGAL -->
+
+      <div class="footer-column">
+
+        <h3>
+          Información
+        </h3>
+
+        <a href="terminos.html">
+          Términos y condiciones
+        </a>
+
+        <a href="privacidad.html">
+          Política de privacidad
+        </a>
+
+      </div>
+
+    </div>
+
+
+    <!-- COPYRIGHT -->
+
+    <div class="footer-bottom">
+
+      <p>
+        © <span id="year"></span>
+        CLASS TOUR. MVP Todos los derechos reservados.
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <!-- =======================================================
+       MODAL PRINCIPAL
+  ======================================================== -->
+
+  <div
+    class="modal hidden"
+    id="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalTitle"
+    aria-hidden="true"
+  >
+
+    <div
+      class="modal-backdrop"
+      id="modalBackdrop"
+    ></div>
+
+
+    <div class="modal-box">
+
+      <button
+        type="button"
+        class="modal-close"
+        id="modalClose"
+        aria-label="Cerrar"
+      >
+        ×
+      </button>
+
+
+      <div id="modalContent">
+        <!--
+          Aquí app.js inyectará el contenido dinámico.
+          El <h2 id="modalTitle"> se crea al abrir el modal.
+        -->
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       APP JS
+  ======================================================== -->
+
+  <script src="js/nav.js" defer></script>
+
+  <script
+    src="js/app.js"
+    defer
+  ></script>
+
+
+  <!-- =======================================================
+       SMART HEADER
+       (el modal de "Quiero enseñar" lo maneja app.js)
+  ======================================================== -->
+
+  <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+      /* =====================================================
+         SMART HEADER
+      ===================================================== */
+
+      const header = document.getElementById("siteHeader");
+
+      if (header) {
+
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener(
+          "scroll",
+          function () {
+
+            const currentScrollY = window.scrollY;
+
+            if (currentScrollY <= 20) {
+
+              header.classList.remove("header-hidden");
+              header.classList.add("header-visible");
+
+            } else if (currentScrollY > lastScrollY) {
+
+              header.classList.add("header-hidden");
+              header.classList.remove("header-visible");
+
+            } else {
+
+              header.classList.remove("header-hidden");
+              header.classList.add("header-visible");
+
+            }
+
+            lastScrollY = currentScrollY;
+
+          },
+          { passive: true }
+        );
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
