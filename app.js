@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
      ========================================================= */
 
   const CONFIG = {
-    API_URL: "https://script.google.com/macros/s/AKfycbwOFOF6MjMwXtNshN2xctvH5uTox5pBZ_-C-H6V1kbTyOf_BNt3hRf4nxWik581Wysl/exec",
+    API_URL: "https://script.google.com/macros/s/AKfycbyvy0q2SbOL_141rS5viSYVBar4GkC0-G03sot0CXgLBk6lIg37-oAQmyPUqD8DUQQv/exec",
     WHATSAPP: "573143376229",
     EMAIL: "classtouraprendizaje@gmail.com",
     NOMBRE_PLATAFORMA: "CLASS TOUR",
