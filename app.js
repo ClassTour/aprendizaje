@@ -1540,41 +1540,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function loadCourses() {
-    showLoadingState();
-
+    async function fetchCursosOnce(url, ms) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), CONFIG.TIMEOUT_MS);
-
+    const timeout = setTimeout(() => controller.abort(), ms);
     try {
-      const response = await fetch(CONFIG.API_URL + "?action=cursos", {
-        signal: controller.signal
-      });
-
-      if (!response.ok) {
-        throw new Error("HTTP " + response.status);
-      }
-
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error("HTTP " + response.status);
       const result = await response.json();
-
       if (!result.ok || !Array.isArray(result.cursos)) {
         throw new Error("Respuesta inválida del servidor");
       }
+      return result.cursos;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
 
-      courses = result.cursos.map(normalizeCourse);
-      loadFailed = false;
+  async function loadCourses() {
+    showLoadingState();
 
-    } catch (error) {
-      console.error("Error cargando cursos:", error);
+    let lista = null;
+    const esperas = [7000, 7000, 10000];
+
+    for (let i = 0; i < esperas.length && !lista; i++) {
+      try {
+        lista = await fetchCursosOnce(
+          CONFIG.API_URL + "?action=cursos&t=" + Date.now(),
+          esperas[i]
+        );
+      } catch (e) {
+        console.warn("Intento " + (i + 1) + " falló", e);
+      }
+    }
+
+    if (!lista) {
+      try {
+        lista = await fetchCursosOnce("cursos.json", 5000);
+        console.warn("Mostrando copia de respaldo (cursos.json)");
+      } catch (e) {
+        console.error("Tampoco se pudo cargar el respaldo", e);
+      }
+    }
+
+    if (!lista) {
       loadFailed = true;
       courses = [];
       showLoadError();
       return;
-
-    } finally {
-      clearTimeout(timeout);
     }
 
+    courses = lista.map(normalizeCourse);
+    loadFailed = false;
     currentCourses = [...courses];
     applyFilters();
   }
