@@ -415,7 +415,7 @@
     <!-- ACCESO -->
     <section class="login" id="loginView">
       <h1>Acceso de administrador</h1>
-      <p>Escribe la clave <code>ADMIN_KEY</code> del archivo <code>.env</code> del backend.</p>
+      <p>Escribe la clave de administrador.</p>
 
       <form id="loginForm" novalidate>
         <div class="field">
@@ -803,13 +803,34 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
           method = "POST";
         }
 
-        const response = await fetch(url, {
-          method,
-          body,
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          signal: controller.signal,
-          redirect: "follow"
-        });
+                // Las lecturas (GET) se reintentan; las escrituras no, para no duplicar datos
+        const intentos = method === "GET" ? 3 : 1;
+        let response = null;
+        let ultimoError = null;
+
+        for (let i = 0; i < intentos; i++) {
+          const ctrl = new AbortController();
+          const t = setTimeout(
+            () => ctrl.abort(),
+            method === "GET" ? 8000 : (timeoutMs || TIMEOUT_MS)
+          );
+          try {
+            response = await fetch(url, {
+              method,
+              body,
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              signal: ctrl.signal,
+              redirect: "follow"
+            });
+            clearTimeout(t);
+            break;
+          } catch (e) {
+            clearTimeout(t);
+            ultimoError = e;
+          }
+        }
+
+        if (!response) throw ultimoError;
 
         const data = await response.json().catch(() => ({}));
         return { status: response.status, ok: response.ok && data.ok !== false, data };
@@ -1259,7 +1280,7 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
       set("c-subcategory", course ? course.subcategory : "");
       set("c-location", course ? course.location : "");
       set("c-level", course ? course.level : "Todos los niveles");
-      set("c-type", course ? course.courseType : "");
+      set("c-type", course ? course.courseType : "Clase");
       set("c-hours", course ? course.hours : "");
       set("c-schedule", course ? course.schedule : "");
       set("c-price", course ? course.price : "");
@@ -1532,18 +1553,28 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
       }
     });
 
-    $("c-photos").addEventListener("input", (event) => {
+       $("c-photos").addEventListener("input", (event) => {
       const lines = event.target.value
         .split("\n")
         .map(l => l.trim().replace(/\\/g, "/"))
         .filter(Boolean)
         .slice(0, MAX_PHOTOS);
 
+      const originales = editingCourse && editingCourse.photos
+        ? editingCourse.photos
+        : [];
+      const idPorUrl = new Map(originales.map((p) => [p.url, p.id]));
+
       photoItems = lines.map((path, index) => ({
         key: ++photoCounter,
-        id: "path-" + index,
+        id: idPorUrl.get(path) || ("path-" + index),
         url: path
       }));
+
+      // Las fotos originales cuya línea se borró del cuadro se eliminan al guardar
+      removedPhotoIds = originales
+        .filter((p) => !lines.includes(p.url))
+        .map((p) => p.id);
 
       renderPhotoGrid();
     });
