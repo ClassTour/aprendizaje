@@ -753,28 +753,25 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
 
     /* ---------- Llamadas al backend ---------- */
 
-    async function api(path, options) {
+        async function api(path, options) {
 
       if (MODO_LOCAL) return await apiLocal(path, options);
 
       const { timeoutMs, ...fetchOptions } = options || {};
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), timeoutMs || TIMEOUT_MS);
 
       try {
-        let url = API_URL;
-        let body = null;
         let method = (fetchOptions.method || "GET").toUpperCase();
+        const esLectura = method === "GET";
+        let parsed = {};
 
-        if (method === "GET") {
+        if (esLectura) {
           if (path === "/api/instructors") {
-            url += "?action=admin/instructores&key=" + encodeURIComponent(adminKey);
+            parsed.tipo = "admin/instructores/listar";
           } else if (path === "/api/admin/courses") {
-            url += "?action=admin/cursos&key=" + encodeURIComponent(adminKey);
+            parsed.tipo = "admin/cursos/listar";
           }
         } else {
-          const parsed = fetchOptions.body ? JSON.parse(fetchOptions.body) : {};
-          parsed.key = adminKey;
+          parsed = fetchOptions.body ? JSON.parse(fetchOptions.body) : {};
 
           if (path === "/api/admin/courses" && method === "POST") {
             parsed.tipo = "admin/cursos/crear";
@@ -798,13 +795,13 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
             parsed.tipo = "admin/instructores/estado";
             parsed.instructorId = path.split("/")[3];
           }
-
-          body = JSON.stringify(parsed);
-          method = "POST";
         }
 
-                // Las lecturas (GET) se reintentan; las escrituras no, para no duplicar datos
-        const intentos = method === "GET" ? 3 : 1;
+        parsed.key = adminKey;
+        const body = JSON.stringify(parsed);
+
+        // Las lecturas se reintentan; las escrituras no, para no duplicar datos
+        const intentos = esLectura ? 3 : 1;
         let response = null;
         let ultimoError = null;
 
@@ -812,11 +809,11 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
           const ctrl = new AbortController();
           const t = setTimeout(
             () => ctrl.abort(),
-            method === "GET" ? 8000 : (timeoutMs || TIMEOUT_MS)
+            esLectura ? 8000 : (timeoutMs || TIMEOUT_MS)
           );
           try {
-            response = await fetch(url, {
-              method,
+            response = await fetch(API_URL, {
+              method: "POST",
               body,
               headers: { "Content-Type": "text/plain;charset=utf-8" },
               signal: ctrl.signal,
@@ -845,8 +842,6 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
               : "No se pudo conectar con el servidor."
           }
         };
-      } finally {
-        clearTimeout(timer);
       }
     }
 
