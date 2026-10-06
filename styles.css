@@ -3300,3 +3300,11 @@ ol {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+.course-media-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.course-media-btn svg {
+  flex: none;
+}
