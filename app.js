@@ -553,9 +553,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <p class="course-tutor">Por: ${escapeHTML(tutor)}</p>
 
-          <p class="course-description">${escapeHTML(description)}</p>
-
          <p class="course-description">${escapeHTML(description)}</p>
+
          ${learningPreview}
 
           <div class="course-actions">
