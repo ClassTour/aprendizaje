@@ -3406,3 +3406,35 @@ ol {
 .course-actions {
   margin-top: auto;
 }
+/* =========================================================
+   AJUSTES: BOTONES, CIERRE DEL MODAL Y CUADROS DE TEXTO
+   (para revertir, borre solo este bloque)
+   ========================================================= */
+
+/* 1. Botones: los claros ahora se ven como botones y los enlaces se alinean igual */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-light {
+  border: 1px solid var(--line);
+}
+
+/* 2. La X del modal se queda visible al hacer scroll */
+.modal-close {
+  position: sticky;
+  top: 10px;
+  right: auto;
+  display: block;
+  margin: 10px 10px -50px auto;
+}
+
+/* 3. Cuadros de texto más cómodos */
+.form-group textarea {
+  height: auto;
+  min-height: 80px;
+  resize: vertical;
+}
