@@ -516,7 +516,18 @@ document.addEventListener("DOMContentLoaded", () => {
              <span aria-hidden="true">✨</span>
              <small>Sin imagen</small>
            </div>`;
-
+       
+      const learningItems = Array.isArray(course.learning) ? course.learning : [];
+      const learningPreview = learningItems.length
+        ? `<div class="card-learning">
+             <strong>¿Qué se aprende?</strong>
+             <ul>
+               ${learningItems.slice(0, 3).map((item) => `<li>${escapeHTML(item)}</li>`).join("")}
+               ${learningItems.length > 3 ? `<li class="card-learning-more">+${learningItems.length - 3} más</li>` : ""}
+             </ul>
+           </div>`
+        : "";
+       
       const videoBtn = hasVideo
         ? `<button type="button" class="course-media-btn" data-media="video" aria-label="Ver video de ${escapeHTML(title)}">${ICON_YT}<span>Video</span></button>`
         : "";
@@ -543,6 +554,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="course-tutor">Por: ${escapeHTML(tutor)}</p>
 
           <p class="course-description">${escapeHTML(description)}</p>
+
+         <p class="course-description">${escapeHTML(description)}</p>
+         ${learningPreview}
 
           <div class="course-actions">
             <button type="button" class="course-view-btn">Ver actividad</button>
