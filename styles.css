@@ -3339,3 +3339,22 @@ ol {
 .reservation-success .btn-light:hover {
   background: #f4f4f0;
 }
+.learning-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.learning-list li {
+  position: relative;
+  padding-left: 26px;
+}
+.learning-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #315c45;
+  font-weight: 800;
+}
