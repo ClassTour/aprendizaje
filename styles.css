@@ -3602,3 +3602,28 @@ ol {
     padding: 14px 16px;
   }
 }
+.course-kit {
+  display: inline-block;
+  margin: 0 0 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: #e3f0e8;
+  color: #24523a;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.kit-notice {
+  margin: 6px 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #e3f0e8;
+  color: #24523a;
+  font-size: 0.85rem;
+}
+
+.kit-notice span {
+  display: block;
+  margin-top: 2px;
+  font-weight: 400;
+}
