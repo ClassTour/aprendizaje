@@ -756,6 +756,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const tutor = course.tutor || "Instructor";
     const location = course.location || "Ubicación por confirmar";
 
+    const learningHTML = course.learning && course.learning.length
+      ? `<div class="detail-section">
+           <h3>¿Qué se aprende?</h3>
+           <ul class="learning-list">
+             ${course.learning.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}
+           </ul>
+         </div>`
+      : "";
+               <div class="detail-section">
+            <h3>Descripción</h3>
+            <p>${escapeHTML(description)}</p>
+          </div>
+
+          ${learningHTML}
     const scheduleInfo = course.schedule
       ? escapeHTML(course.schedule)
       : "El instructor te contactará para coordinar el horario.";
@@ -1507,7 +1521,12 @@ document.addEventListener("DOMContentLoaded", () => {
       courseType: raw.courseType || "Curso",
       calUrl: raw.calUrl || "",
       youtubeUrl: raw.youtubeUrl || "",
-      photo360: raw.photo360 || ""
+      photo360: raw.photo360 || "",
+      learning: Array.isArray(raw.learning)
+        ? raw.learning
+            .map((s) => String(s).replace(/^\s*[-•*]\s*/, "").trim())
+            .filter(Boolean)
+        : []
     };
   }
 
