@@ -3358,3 +3358,39 @@ ol {
   color: #315c45;
   font-weight: 800;
 }
+.card-learning {
+  margin: 4px 0 14px;
+  font-size: 0.88rem;
+}
+.card-learning strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #17211b;
+}
+.card-learning ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+}
+.card-learning li {
+  position: relative;
+  padding-left: 20px;
+  color: #68736c;
+}
+.card-learning li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #315c45;
+  font-weight: 800;
+}
+.card-learning li.card-learning-more::before {
+  content: "";
+}
+.card-learning li.card-learning-more {
+  padding-left: 0;
+  font-weight: 700;
+  color: #315c45;
+}
