@@ -595,6 +595,19 @@
             </div>
 
             <div class="field full">
+              <label class="checkline">
+                <input type="checkbox" id="c-kit">
+                Incluye kit de materiales
+              </label>
+            </div>
+
+            <div class="field full" id="kitDetailField" hidden>
+              <label for="c-kit-detail">¿Qué incluye el kit?</label>
+              <input type="text" id="c-kit-detail" maxlength="300" placeholder="Ej. Cuero, hilos, agujas y madera lavada">
+              <small>Opcional. Se muestra en la ficha del curso.</small>
+            </div>
+            
+            <div class="field full">
               <label for="c-cal">Enlace de reservas (opcional)</label>
               <input type="url" id="c-cal" placeholder="https://cal.com/..., https://calendly.com/..., etc.">
               <small>Si lo dejas vacío, el estudiante te contactará por WhatsApp o correo.</small>
@@ -1286,6 +1299,9 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
       set("c-youtube", course ? course.youtubeUrl : "");
       set("c-360", course ? course.photo360 : "");
       $("c-published").checked = course ? course.published : false;
+      $("c-kit").checked = course ? course.includesKit === true : false;
+      set("c-kit-detail", course ? course.kitDetail : "");
+      toggleKitDetail();
 
 
       photoItems = course
@@ -1391,6 +1407,8 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
         calUrl: value("c-cal"),
         youtubeUrl: value("c-youtube"),
         photo360: value("c-360").replace(/\\/g, "/"),
+        includesKit: $("c-kit").checked,
+        kitDetail: value("c-kit-detail"),
         published: $("c-published").checked
       };
     }
@@ -1576,7 +1594,12 @@ assets/img/cursos/mi-foto-2.jpg"></textarea>
 
 
     /* ---------- Inicio ---------- */
+    function toggleKitDetail() {
+      $("kitDetailField").hidden = !$("c-kit").checked;
+    }
 
+    $("c-kit").addEventListener("change", toggleKitDetail);
+    
     (async function init() {
       if (MODO_LOCAL) {
         showPanel();
