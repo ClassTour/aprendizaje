@@ -746,8 +746,8 @@ document.addEventListener("DOMContentLoaded", () => {
      FORMULARIO DE RESERVA
      ========================================================= */
 
-  function showBookingForm(course) {
-    if (!modalContent) return;
+    function showCourseDetail(course) {
+    if (!modal || !modalContent) return;
 
     destroyPano();
     currentCourse = course;
@@ -755,121 +755,130 @@ document.addEventListener("DOMContentLoaded", () => {
     const title = course.title || "Actividad sin título";
     const tutor = course.tutor || "Instructor";
     const location = course.location || "Ubicación por confirmar";
+    const category = course.category || "General";
+    const courseType = course.courseType || "Actividad";
+    const description = course.description || "No hay descripción disponible.";
 
-    const learningHTML = course.learning && course.learning.length
+    const imageHTML = course.image
+      ? `<div class="course-detail-image">
+           <img src="${escapeHTML(course.image)}" alt="${escapeHTML(title)}" loading="lazy">
+         </div>`
+      : `<div class="course-detail-image">
+           <div class="course-image-placeholder course-detail-placeholder">
+             <span aria-hidden="true">✨</span>
+             <small>Sin imagen</small>
+           </div>
+         </div>`;
+
+    const learningItems = Array.isArray(course.learning) ? course.learning : [];
+    const learningHTML = learningItems.length
       ? `<div class="detail-section">
            <h3>¿Qué se aprende?</h3>
            <ul class="learning-list">
-             ${course.learning.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}
+             ${learningItems.map((item) => `<li>${escapeHTML(item)}</li>`).join("")}
            </ul>
          </div>`
       : "";
-               <div class="detail-section">
+
+    const scheduleLine = course.schedule
+      ? `<div class="detail-grid">
+           <div>
+             <small>Horario</small>
+             <strong>🕐 ${escapeHTML(course.schedule)}</strong>
+           </div>
+         </div>`
+      : "";
+
+    modalContent.innerHTML = `
+      <div class="course-detail">
+
+        ${imageHTML}
+
+        <div class="course-detail-content">
+
+          <span class="course-detail-badge">
+            ${escapeHTML(courseType)} · ${escapeHTML(category)}
+          </span>
+
+          <h2 id="modalTitle">${escapeHTML(title)}</h2>
+
+          <p class="detail-tutor">
+            Instructor: <strong>${escapeHTML(tutor)}</strong>
+          </p>
+
+          <div class="detail-grid">
+            <div>
+              <small>Ubicación</small>
+              <strong>📍 ${escapeHTML(location)}</strong>
+            </div>
+            <div>
+              <small>Categoría</small>
+              <strong>${escapeHTML(category)}</strong>
+            </div>
+          </div>
+
+          ${scheduleLine}
+
+          <div class="detail-section">
             <h3>Descripción</h3>
             <p>${escapeHTML(description)}</p>
           </div>
 
           ${learningHTML}
-    const scheduleInfo = course.schedule
-      ? escapeHTML(course.schedule)
-      : "El instructor te contactará para coordinar el horario.";
 
-    modalContent.innerHTML = `
-      <div class="booking-modal">
-
-        <h2 id="modalTitle">Reservar: ${escapeHTML(title)}</h2>
-
-        <p>
-          Completa tus datos y envía la solicitud.
-          La reserva quedará registrada como <strong>Pendiente</strong>.
-        </p>
-
-        <div class="booking-summary">
-          <span><strong>Actividad:</strong> ${escapeHTML(title)}</span>
-          <span><strong>Instructor:</strong> ${escapeHTML(tutor)}</span>
-          <span><strong>Ubicación:</strong> ${escapeHTML(location)}</span>
-          <span><strong>Valor:</strong> ${formatPrice(course.price)}</span>
-        </div>
-
-        <form id="bookingForm" class="booking-form">
-
-          <div class="form-grid">
-
-            <div class="form-group">
-              <label for="bookingName">Nombre *</label>
-              <input type="text" id="bookingName" name="nombre" required maxlength="100" autocomplete="name">
-            </div>
-
-            <div class="form-group">
-              <label for="bookingEmail">Correo electrónico *</label>
-              <input type="email" id="bookingEmail" name="correo" required maxlength="254" autocomplete="email">
-            </div>
-
-            <div class="form-group">
-              <label for="bookingPhone">WhatsApp *</label>
-              <input type="tel" id="bookingPhone" name="whatsapp" required maxlength="25" autocomplete="tel" placeholder="Ej. 3001234567">
-            </div>
-
-            <div class="form-group full">
-              <label>Horario disponible</label>
-              <div class="info-box">${scheduleInfo}</div>
-            </div>
-
-            <div class="form-group full">
-              <label for="bookingNote">Mensaje para el instructor</label>
-              <textarea id="bookingNote" name="mensaje" rows="4" maxlength="2000" placeholder="Cuéntanos qué información necesitas o por qué te interesa esta actividad..."></textarea>
-            </div>
-
+          <div class="detail-price">
+            <small>Valor</small>
+            <strong>${formatPrice(course.price)}</strong>
           </div>
 
           <div class="cash-notice">
-            💵 <strong>Pago en efectivo al finalizar la actividad.</strong>
+            💵 <strong>Pago en efectivo</strong> al finalizar la actividad.
             <br>
-            <small>El pago se realiza directamente al instructor, no a CLASS TOUR.</small>
+            <small>
+              CLASS TOUR no procesa pagos.
+              El pago se realiza directamente al instructor.
+            </small>
           </div>
 
-          <div class="legal-check">
-            <label>
-              <input type="checkbox" id="bookingConsent" required>
-              <span>
-                Autorizo a CLASS TOUR el tratamiento de mis datos
-                personales conforme a la
-                <a href="privacidad.html" target="_blank" rel="noopener">Política de Privacidad</a>
-                para gestionar mi solicitud de reserva.
-              </span>
-            </label>
+          <div class="booking-box">
+            <div>
+              <h3>¿Te interesa esta actividad?</h3>
+              <p>Reserva tu cupo y nos pondremos en contacto contigo.</p>
+            </div>
+            <button type="button" id="modalReserveBtn">Quiero reservar</button>
           </div>
 
-          <div id="bookingStatus" class="form-status" aria-live="polite"></div>
-
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary" id="confirmBookingBtn">
-              Enviar solicitud
-            </button>
-            <button type="button" class="btn btn-light" id="backToCourseBtn">
-              Volver a la actividad
+          <div class="booking-box">
+            <div>
+              <h3>¿Tienes preguntas?</h3>
+              <p>Escríbenos por WhatsApp y resolveremos tus dudas.</p>
+            </div>
+            <button type="button" class="btn btn-light" id="modalWhatsAppBtn">
+              Consultar por WhatsApp
             </button>
           </div>
 
-        </form>
-
+        </div>
       </div>
     `;
 
-    const backButton = document.getElementById("backToCourseBtn");
-    if (backButton) {
-      backButton.addEventListener("click", () => showCourseDetail(course));
+    const reserveButton = document.getElementById("modalReserveBtn");
+    if (reserveButton) {
+      reserveButton.addEventListener("click", () => showBookingForm(course));
     }
 
-    const bookingForm = document.getElementById("bookingForm");
-    if (bookingForm) {
-      bookingForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        await confirmBooking(course);
+    const whatsappButton = document.getElementById("modalWhatsAppBtn");
+    if (whatsappButton) {
+      whatsappButton.addEventListener("click", () => {
+        const message =
+          `Hola, CLASS TOUR. Estoy interesado en la actividad "${title}" impartida por ${tutor} en ${location}. Quisiera recibir más información.`;
+
+        window.open(getWhatsAppUrl(message), "_blank", "noopener,noreferrer");
       });
     }
-  }
 
+    openModal();
+  }
 
   /* =========================================================
      ENVIAR RESERVA AL GOOGLE APPS SCRIPT
