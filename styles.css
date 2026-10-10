@@ -3555,3 +3555,50 @@ ol {
     font-size: 0.85rem;
   }
 }
+/* =========================================================
+   CÓMO FUNCIONA: COMPACTO Y SIN NÚMEROS
+   (para revertir, borre solo este bloque)
+   ========================================================= */
+
+.how-section {
+  padding: 45px 0;
+}
+
+.how-section .section-heading {
+  margin-bottom: 20px;
+}
+
+.how-number {
+  display: none;
+}
+
+.how-grid {
+  gap: 12px;
+}
+
+.how-card {
+  min-height: 0;
+  padding: 16px 20px;
+  border-radius: 14px;
+}
+
+.how-card h3 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.how-card p {
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 700px) {
+  .how-section {
+    padding: 35px 0;
+  }
+
+  .how-card {
+    min-height: 0;
+    padding: 14px 16px;
+  }
+}
